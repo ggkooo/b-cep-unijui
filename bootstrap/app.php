@@ -15,10 +15,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'api.key' => EnsureApiKeyIsValid::class,
         ]);
-
-        $middleware->appendToGroup('api', [
-            EnsureApiKeyIsValid::class,
-        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
