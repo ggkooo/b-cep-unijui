@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Resources\NormativeSectionResource;
 use App\Models\NormativeSection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 class NormativeSectionController extends ContentController
 {
@@ -22,14 +22,16 @@ class NormativeSectionController extends ContentController
 
     public function destroy(int $id): JsonResponse
     {
-        $section = NormativeSection::query()->with('items')->findOrFail($id);
+        $section = NormativeSection::query()->withCount('items')->findOrFail($id);
 
-        foreach ($section->items as $item) {
-            Storage::disk('public')->delete($item->file_path);
+        if ($section->items_count > 0) {
+            return response()->json([
+                'message' => 'Não é possível remover esta seção pois ela possui normativas atreladas a ela.',
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $section->delete();
 
-        return response()->json(['message' => 'Removido com sucesso.']);
+        return response()->json(['message' => 'Seção removida com sucesso.']);
     }
 }

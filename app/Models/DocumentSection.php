@@ -2,15 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['title', 'sort_order'])]
 class DocumentSection extends Model
 {
-    public function items(): HasMany
+    use HasFactory;
+
+    protected $table = 'document_sections';
+
+    protected $fillable = [
+        'title',
+        'sort_order',
+    ];
+
+    public function items()
     {
-        return $this->hasMany(DocumentItem::class)->orderBy('sort_order');
+        return $this->hasMany(DocumentItem::class, 'document_section_id')->orderBy('sort_order', 'asc');
     }
 }
