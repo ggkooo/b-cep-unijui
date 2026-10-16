@@ -15,7 +15,9 @@ class TutorialController extends ContentController
 
     protected array $storeRules = [
         'title' => ['required', 'string', 'max:255'],
-        'description' => ['required', 'string', 'max:255'],
+        'description' => ['nullable', 'string'],
+        'url' => ['nullable', 'string'],
         'sort_order' => ['nullable', 'integer', 'min:0'],
+        'file' => ['nullable', 'file', 'max:20480'],
     ];
 }
